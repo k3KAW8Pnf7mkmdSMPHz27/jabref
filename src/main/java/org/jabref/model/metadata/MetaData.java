@@ -9,10 +9,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-
 import org.jabref.architecture.AllowedToUseLogic;
+import org.jabref.gui.util.OptionalObjectProperty;
 import org.jabref.logic.citationkeypattern.AbstractCitationKeyPattern;
 import org.jabref.logic.citationkeypattern.DatabaseCitationKeyPattern;
 import org.jabref.logic.citationkeypattern.GlobalCitationKeyPattern;
@@ -56,8 +54,8 @@ public class MetaData {
     private final Map<EntryType, String> citeKeyPatterns = new HashMap<>(); // <BibType, Pattern>
     private final Map<String, String> userFileDirectory = new HashMap<>(); // <User, FilePath>
     private final Map<String, Path> laTexFileDirectory = new HashMap<>(); // <User, FilePath>
-    private final ObjectProperty<GroupTreeNode> groupsRoot = new SimpleObjectProperty<>(null);
-    private final OptionalBinding<GroupTreeNode> groupsRootBinding = new OptionalWrapper<>(groupsRoot);
+    private final OptionalObjectProperty<GroupTreeNode> groupsRoot = OptionalObjectProperty.empty();
+    private final OptionalBinding<GroupTreeNode> groupsRootBinding = new OptionalWrapper<>(groupsRoot.orElse(null));
     private Charset encoding;
     private SaveOrderConfig saveOrderConfig;
     private String defaultCiteKeyPattern;
@@ -98,7 +96,7 @@ public class MetaData {
      */
     public void setGroups(GroupTreeNode root) {
         Objects.requireNonNull(root);
-        groupsRoot.setValue(root);
+        groupsRoot.setValue(Optional.of(root));
         root.subscribeToDescendantChanged(groupTreeNode -> groupsRootBinding.invalidate());
         root.subscribeToDescendantChanged(groupTreeNode -> eventBus.post(new GroupUpdatedEvent(this)));
         eventBus.post(new GroupUpdatedEvent(this));
