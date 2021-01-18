@@ -70,14 +70,17 @@ public class BibEntryTableViewModel {
     }
 
     private static Binding<List<AbstractGroup>> createMatchedGroupsBinding(BibDatabaseContext database, BibEntry entry) {
-        return new UiThreadBinding<>(EasyBind.combine(entry.getFieldBinding(StandardField.GROUPS), database.getMetaData().groupsBinding(),
-                (a, b) ->
+        var binding = Bindings.createObjectBinding(() ->
                         database.getMetaData().getGroups().map(groupTreeNode ->
                                 groupTreeNode.getMatchingGroups(entry).stream()
                                              .map(GroupTreeNode::getGroup)
                                              .filter(Predicate.not(Predicate.isEqual(groupTreeNode.getGroup())))
                                              .collect(Collectors.toList()))
-                                .orElse(Collections.emptyList())));
+                                .orElse(Collections.emptyList()),
+                database.getMetaData().groupsBinding(),
+                entry.getFieldsObservable(),
+                entry.typeProperty());
+        return new UiThreadBinding<>(binding);
     }
 
     public OptionalBinding<String> getField(Field field) {
