@@ -76,7 +76,7 @@ recipeList:
   #  - org.openrewrite.staticanalysis.ReplaceTextBlockWithString
   # Hangs
   #  - org.openrewrite.staticanalysis.ReplaceValidateNotNullHavingVarargsWithObjectsRequireNonNull
-  # We need that in OOBibStyleTest
+  # We need that in JStyleTest
   #  - org.openrewrite.staticanalysis.SimplifyConstantIfBranchExecution
 
   # We log and wrap the exceptions
@@ -85,7 +85,8 @@ recipeList:
   #  - org.openrewrite.staticanalysis.UnnecessaryCloseInTryWithResources
   # Does not work
   #  - org.openrewrite.staticanalysis.UnnecessaryExplicitTypeArguments
-  - org.openrewrite.staticanalysis.UnnecessaryParentheses
+  # Removes too much
+  #  - org.openrewrite.staticanalysis.UnnecessaryParentheses
   # Does not work
   #  - org.openrewrite.staticanalysis.UnnecessaryPrimitiveAnnotations
   # Removes too much throws
@@ -101,14 +102,15 @@ recipeList:
 
   - org.openrewrite.java.migrate.io.ReplaceFileInOrOutputStreamFinalizeWithClose
   - org.openrewrite.java.migrate.net.JavaNetAPIs
-  - org.openrewrite.java.migrate.net.URLConstructorsToURIRecipes
+  - org.openrewrite.java.migrate.net.URLConstructorToURICreate
+  - org.openrewrite.java.migrate.net.URLConstructorsToNewURI
   - org.openrewrite.java.migrate.util.OptionalNotEmptyToIsPresent
   - org.openrewrite.java.migrate.util.OptionalNotPresentToIsEmpty
   - org.openrewrite.java.migrate.util.SequencedCollection
   - org.openrewrite.java.migrate.lang.StringFormatted
 
   - org.openrewrite.java.RemoveObjectsIsNull
-  - org.openrewrite.java.ShortenFullyQualifiedTypeReferences
+ # - org.openrewrite.java.ShortenFullyQualifiedTypeReferences
 
   - org.openrewrite.java.testing.junit5.AssertTrueInstanceofToAssertInstanceOf
   - org.openrewrite.java.testing.junit5.RemoveTryCatchFailBlocks
@@ -126,8 +128,7 @@ recipeList:
   - org.openrewrite.staticanalysis.CompareEnumsWithEqualityOperator
   - org.openrewrite.staticanalysis.ControlFlowIndentation
   - org.openrewrite.staticanalysis.CovariantEquals
-  # Needs manual intervention
-#  - org.openrewrite.staticanalysis.DefaultComesLast
+  - org.openrewrite.staticanalysis.DefaultComesLast
   - org.openrewrite.staticanalysis.EmptyBlock
   - org.openrewrite.staticanalysis.EqualsAvoidsNull
   - org.openrewrite.staticanalysis.EqualsToContentEquals
@@ -186,7 +187,8 @@ recipeList:
   - org.openrewrite.staticanalysis.SortedSetStreamToLinkedHashSet
   - org.openrewrite.staticanalysis.StaticMethodNotFinal
   - org.openrewrite.staticanalysis.StringLiteralEquality
-  - org.openrewrite.staticanalysis.TypecastParenPad
+  # Disabled, because of https://github.com/openrewrite/rewrite-static-analysis/issues/561
+  # - org.openrewrite.staticanalysis.TypecastParenPad
   - org.openrewrite.staticanalysis.UnwrapRepeatableAnnotations
   - org.openrewrite.staticanalysis.UpperCaseLiteralSuffixes
   - org.openrewrite.staticanalysis.UseDiamondOperator
@@ -213,4 +215,10 @@ recipeList:
   # - org.openrewrite.java.testing.junit5.StaticImports
 
   # Logging
-  - org.openrewrite.java.logging.slf4j.Slf4jBestPractices
+  # cannot use "org.openrewrite.java.logging.slf4j.Slf4jBestPractices", because we sometimes really want "LOGGER.debug" instead of "LOGGER.error"
+  #   NOT: https://docs.openrewrite.org/recipes/java/logging/catchblockloglevel
+  # Manual collection of https://docs.openrewrite.org/recipes/java/logging/slf4j/slf4jbestpractices
+  - org.openrewrite.java.logging.slf4j.LoggersNamedForEnclosingClass
+  - org.openrewrite.java.logging.slf4j.ParameterizedLogging
+  - org.openrewrite.java.logging.slf4j.Slf4jLogShouldBeConstant
+  - org.openrewrite.java.logging.slf4j.CompleteExceptionLogging
