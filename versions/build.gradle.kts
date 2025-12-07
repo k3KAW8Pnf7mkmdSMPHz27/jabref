@@ -137,7 +137,7 @@ dependencies.constraints {
     api("org.controlsfx:controlsfx:11.2.2")
     api("org.eclipse.jgit:org.eclipse.jgit:7.3.0.202506031305-r")
     api("org.fxmisc.flowless:flowless:0.7.4")
-    api("org.fxmisc.richtext:richtextfx:0.11.6")
+    api("org.fxmisc.richtext:richtextfx:0.11.7")
     api("org.glassfish.hk2:hk2-api:3.1.1")
     api("org.glassfish.hk2:hk2-locator:3.1.1")
     api("org.glassfish.hk2:hk2-utils:3.1.1")
